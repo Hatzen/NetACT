@@ -14,6 +14,7 @@ from threading import Lock
 # Both Keys
 KEY_BROADCAST_PORT = "BROADCAST_PORT"
 KEY_SERVER_PORT = "SERVER_PORT"
+KEY_ROLE = "KEY_ROLE"
 
 # Client Keys
 KEY_CLIENT_ID = "CLIENT_ID"

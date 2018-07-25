@@ -12,9 +12,6 @@ from src import statics
 from src import storage
 from src import connection as con
 
-# TODO: File location
-file = "raw/file.java"
-
 
 class Client:
 
@@ -47,7 +44,7 @@ class Client:
     def execute_file(self):
         commands = []
         commands[0] = storage.get(storage.KEY_COMMAND_PART_I)
-        commands[1] = storage.get(storage.KEY_FILE_NAME)
+        commands[1] = statics.PROGRAM_PATH + storage.get(storage.KEY_FILE_NAME)
         commands[2] = storage.get(storage.KEY_COMMAND_PART_II)
         # TODO: CWD needed? FOR WORKING WITH FILE?
         self.process = Popen(commands, stdout=PIPE, stderr=PIPE, bufsize=1)
@@ -62,8 +59,16 @@ class Client:
         try:
             with stream:
                 for line in iter(stream.readline, b''):
-                    # TODO: Filter for "State" lines and send them to server.
-                    print( line )
+                    # Extract State message
+                    start = line.find(statics.MESSAGE_PREFIX)
+                    end = line.find(statics.MESSAGE_POSTFIX)
+                    # State message found
+                    if start != -1 != end:
+                        # Send to server with client id
+                        self.connection.send_command(statics.COMMAND_UPDATE_STATE
+                                                     , storage.get(storage.KEY_CLIENT_ID)
+                                                     , line[start: end])
+                        print("State:" + line[start: end])
         finally:
             print( "Error" )
 
@@ -87,7 +92,7 @@ class ClientConnection(con.Connection):
     def handle_command(self, command):
         # Check for Commands, some may contain params
         if command == statics.COMMAND_SEND_FILE:
-            filename = storage.get(storage.KEY_FILE_PATH)
-            self.send_file(filename)
+            filename = statics.PROGRAM_PATH + storage.get(storage.KEY_FILE_NAME)
+            self.receive_file(filename)
         elif command == statics.COMMAND_EXIT:
             self.sock.close()

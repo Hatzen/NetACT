@@ -3,17 +3,22 @@
 import sys
 from src import server
 from src import client
+from src import storage
 
 
 def main():
-    
+    configfile = ""
+    if len(sys.argv) == 1:
+        # One Argument means specific config.
+        configfile = sys.argv[0]
+        # TODO: Use config file
 
-    if (arg[1] == "server"):
+    if storage.get(storage.KEY_ROLE) == "SERVER":
         server.Server()
-
-    if (arg[1] == "client"):
+    elif storage.get(storage.KEY_ROLE) == "CLIENT":
         client.Client()
-
+    else:
+        print("Unsupported Role")
 
 if __name__ == "__main__":
     main()
