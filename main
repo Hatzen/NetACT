@@ -1,0 +1,19 @@
+#!/usr/bin/python
+
+import sys
+from src import server
+from src import client
+
+
+def main():
+    
+
+    if (arg[1] == "server"):
+        server.Server()
+
+    if (arg[1] == "client"):
+        client.Client()
+
+
+if __name__ == "__main__":
+    main()
