@@ -1,25 +1,35 @@
 /**
- * Sends and recieves states to the mother process.
+ * Sends and recieves states to the parent process.
  */
 public class NetACTCommunicator
 {
+    // Internal attributes to stand out from normal I/O-Data
     private static final String prefix = "**//**NetACTCommunicator**START**";
     private static final String postfix = "**END**NetACTCommunicator**//**";
 
     /**
-     * Send current state to the mother process Programm.
+     * Send current state to the parent process.
      * @param state a String representing the current state of this Program.
      */
     public static void sendState(String state) {
       System.err.println(getUniqueString( state ));
     }
 
-
+    /**
+     * Will force the current thread to wait until the parent process notifies with
+     * the given state.
+     * @param state a String representing the state of an external Program.
+     */
     public static void waitForState(String state) {
       Scanner s = new Scanner(System.in);
       while(!s.readLine().contains(getUniqueString(state)) ) { }
     }
 
+    /**
+     * Will force all threads to wait until the parent process notifies with
+     * the given state.
+     * @param state a String representing the state of an external Program.
+     */
     public static void waitAllForState(String state) {
         // https://stackoverflow.com/questions/1323408/get-a-list-of-all-threads-currently-running-in-java
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
